@@ -29,6 +29,10 @@
         visibility: hidden;
     }
 
+    #winner-banner {
+        visibility: hidden;
+    }
+
     .tic-tac-toe-cell {
         border: solid 1px black;
         text-align: center;
@@ -66,6 +70,7 @@
                 <button id="start-btn" onclick="startGame();" disabled>Start Game</button>
                 <div>
                     <span id="suggestion-msg" style="color: blue;">Per iniziare inserire il nome di entrambi i giocatori</span>
+                    <span id="winner-banner" class="text-center"> </span>
                 </div>
             </div>
             
@@ -181,9 +186,17 @@
 
             this.checkWinner = function() {
                 this.winner = _checkWinner(this.board);
+                // console.log('WINNER:');
+                // console.log(this.winner);
                 if (this.winner != null) {
-                    console.log('winner -> ' + this.winner);
+                    if (this.player1.symbol.toUpperCase() === this.winner.toUpperCase()) {
+                        return this.player1;
+                    }
+                    if (this.player2.symbol.toUpperCase() === this.winner.toUpperCase()) {
+                        return this.player2;
+                    }
                 }
+                return null;
             }
 
             this.checkTurn = function() { 
@@ -245,6 +258,13 @@
             return null;
         }
 
+        function showWinner(winnerPlayer) {
+            if (winnerPlayer != null && winnerPlayer != undefined) {
+                document.getElementById('winner-banner').innerHTML += winnerPlayer.name + ' HAI VINTO!!!'; 
+                document.getElementById('winner-banner').style.visibility = 'visible';
+            }
+        }
+
         function handleCellChange(event) {
             const cell = event.target;
             const _symbol = cell.value;
@@ -271,7 +291,14 @@
             // update model
             ticTacToe.changeTurn();
             ticTacToe.updateBoard(data, symbol);
-            ticTacToe.checkWinner();
+            const theWinner = ticTacToe.checkWinner();
+            if (theWinner != null) {
+                showWinner(theWinner);
+            }
+        }
+
+        function restart() {
+            // TODO reset game
         }
 
         function error(error, useAlert = true) {
