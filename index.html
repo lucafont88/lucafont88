@@ -58,17 +58,20 @@
         <div class="row">
             
             <div id="giocatore-1-container" class="col">
-                <label for="input-giocatore-1">Giocatore 1</label>
-                <input type="text" id="input-giocatore-1" class="input-giocatore" name="input-giocatore-1" placeholder="Giocatore 1">
+                <label for="input-giocatore-1">Giocatore <span style="color: red;">X</span></label>
+                <input type="text" id="input-giocatore-1" class="input-giocatore" name="input-giocatore-1">
             </div>
 
             <div id="start-btn-container" class="col">
-                <button id="start-btn" onclick="startGame();">Start Game</button>
+                <button id="start-btn" onclick="startGame();" disabled>Start Game</button>
+                <div>
+                    <span id="suggestion-msg" style="color: blue;">Per iniziare inserire il nome di entrambi i giocatori</span>
+                </div>
             </div>
             
             <div id="giocatore-2-container" class="col">
-                <label for="input-giocatore-2">Giocatore 2</label>
-                <input type="text" id="input-giocatore-2" class="input-giocatore" name="input-giocatore-2" placeholder="Giocatore 2">
+                <label for="input-giocatore-2">Giocatore <span style="color: blue;">O</span></label>
+                <input type="text" id="input-giocatore-2" class="input-giocatore" name="input-giocatore-2">
             </div>
 
         </div>
@@ -112,6 +115,7 @@
         
         const ticTacToe = new TicTacToe();
         
+        // Main Function TicTacToe()
         function TicTacToe() {
            
             this.board = [
@@ -123,6 +127,7 @@
             this.player1 = undefined;
             this.player2 = undefined;
 
+            this.nMove = 0;
             this.turn = 'X';
             this.winner = null;
 
@@ -163,6 +168,7 @@
 
             this.updateBoard = function(cell, value) {
                 this.board[cell.position.row][cell.position.col] = value;
+                this.nMove++;
             };
 
             this.changeTurn = function() {
@@ -176,13 +182,13 @@
             }
 
             this.checkWinner = function() {
-                console.log('check winner');
                 this.winner = _checkWinner(this.board);
-                console.log('winner -> ' + this.winner);
+                if (this.winner != null) {
+                    console.log('winner -> ' + this.winner);
+                }
             }
 
             this.checkTurn = function() {  // TODO fix
-                console.log('check turn');
                 if (this.turn === 'X') {
                     return 'X';
                 } else {
@@ -277,6 +283,32 @@
             console.log(ticTacToeCells);
             ticTacToeCells.forEach((cell) => {
                 cell.addEventListener('input', handleCellChange);
+            });
+            
+            document.getElementById('input-giocatore-1').addEventListener('input', (event) => {
+                const inputGiocatore1 = event.target.value;
+                const inputGiocatore2 = document.getElementById('input-giocatore-2').value;
+                if (inputGiocatore1 !== undefined && inputGiocatore1 !== null && inputGiocatore1 !== ''
+                    && inputGiocatore2 !== undefined && inputGiocatore2 !== null && inputGiocatore2 !== '') {
+                    document.getElementById('start-btn').disabled = false;
+                    document.getElementById('suggestion-msg').style.visibility = 'hidden';
+                } else {
+                    document.getElementById('start-btn').disabled = true;
+                    document.getElementById('suggestion-msg').style.visibility = 'visible';
+                }
+            });
+
+            document.getElementById('input-giocatore-2').addEventListener('input', (event) => {
+                const inputGiocatore2 = event.target.value;
+                const inputGiocatore1 = document.getElementById('input-giocatore-1').value;
+                if (inputGiocatore2 !== undefined && inputGiocatore2 !== null && inputGiocatore2 !== ''
+                    && inputGiocatore1 !== undefined && inputGiocatore1 !== null && inputGiocatore1 !== '') {
+                    document.getElementById('start-btn').disabled = false;
+                    document.getElementById('suggestion-msg').style.visibility = 'hidden';
+                } else {
+                    document.getElementById('start-btn').disabled = true;
+                    document.getElementById('suggestion-msg').style.visibility = 'visible';
+                }
             });
         });
     </script>
