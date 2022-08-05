@@ -78,7 +78,7 @@
     <div id="app">
         <table id="app-table">
             <tr>
-                <td id="cell-0-0"><input id="c-0-0" type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-0-0"><input id="c-0-0" data-cell='{"row":0, "col":0}' type="text" class="tic-tac-toe-cell"></td>
                 <td id="cell-0-1"><input id="c-0-1" type="text" class="tic-tac-toe-cell"></td>
                 <td id="cell-0-2"><input id="c-0-2" type="text" class="tic-tac-toe-cell"></td>
             </tr>
@@ -120,6 +120,10 @@
             this.turn = 'X';
             this.winner = null;
 
+            this.updateBoard = function(cell, value) {
+                this.board[cell.row][cell.col] = cell.value;
+            };
+
             this.changeTurn = function() {
                 console.log('change turn');
                 if (this.turn === 'X') {
@@ -134,6 +138,15 @@
                 console.log('check winner');
                 this.winner = _checkWinner(this.board);
                 console.log('winner -> ' + this.winner);
+            }
+
+            this.checkTurn = function() {  // TODO fix
+                console.log('check turn');
+                if (this.turn === 'X') {
+                    return 'X';
+                } else {
+                    return 'O';
+                }
             }
         }
 
@@ -179,6 +192,9 @@
         function handleCellChange(event) {
             const cell = event.target;
             const _symbol = cell.value;
+            console.log(cell.dataset.cell);
+            const data = JSON.parse(`{"position": ${cell.dataset.cell} }`);
+            console.log(data);
             const symbol = _symbol.toUpperCase();
             if (symbol !== 'X' && symbol !== 'O') {
                 alert('Il simbolo deve essere X o O');
@@ -191,6 +207,8 @@
             ticTacToe.checkWinner();
         }
 
+
+
         function error(error, useAlert = true) {
             console.error(error);
             if (useAlert === true) {
@@ -202,6 +220,7 @@
         window.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
             const ticTacToeCells = Array.from(document.getElementsByClassName('tic-tac-toe-cell'));
+            console.log(ticTacToeCells);
             ticTacToeCells.forEach((cell) => {
                 cell.addEventListener('input', handleCellChange);
             });
