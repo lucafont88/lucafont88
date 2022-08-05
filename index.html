@@ -172,13 +172,11 @@
             };
 
             this.changeTurn = function() {
-                console.log('change turn');
                 if (this.turn === 'X') {
                     this.turn = 'O';
                 } else {
                     this.turn = 'X';
                 }
-                console.log('current turn -> ' + this.turn);
             }
 
             this.checkWinner = function() {
@@ -188,7 +186,7 @@
                 }
             }
 
-            this.checkTurn = function() {  // TODO fix
+            this.checkTurn = function() { 
                 if (this.turn === 'X') {
                     return 'X';
                 } else {
@@ -202,7 +200,7 @@
             this.symbol = symbol;
         }
 
-        // Main
+
         function startGame(event) {
             const player1name = document.getElementById('input-giocatore-1').value;
             const player2name = document.getElementById('input-giocatore-2').value;
@@ -279,8 +277,8 @@
         // Quando la pagina è pronta, ci attacco i listener
         window.addEventListener('DOMContentLoaded', (event) => {
             console.log('DOM fully loaded and parsed');
+            console.log('Hidratyng the page...');
             const ticTacToeCells = Array.from(document.getElementsByClassName('tic-tac-toe-cell'));
-            console.log(ticTacToeCells);
             ticTacToeCells.forEach((cell) => {
                 cell.addEventListener('input', handleCellChange);
             });
@@ -310,6 +308,8 @@
                     document.getElementById('suggestion-msg').style.visibility = 'visible';
                 }
             });
+
+            console.log('Done!');
         });
     </script>
 </body>
