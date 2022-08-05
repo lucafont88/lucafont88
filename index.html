@@ -205,8 +205,14 @@
             cell.style.color = symbol === 'X' ? 'red' : 'blue';
             ticTacToe.changeTurn();
             ticTacToe.checkWinner();
+            ticTacToe.updateBoard(data, symbol);
         }
 
+        extractCellCoordinates = function(cell) {
+            const row = cell.dataset.row;
+            const col = cell.dataset.col;
+            return {row: row, col: col};
+        }
 
 
         function error(error, useAlert = true) {
