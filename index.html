@@ -26,6 +26,7 @@
         border-collapse: collapse;
         margin-left: auto;
         margin-right: auto;
+        visibility: hidden;
     }
 
     .tic-tac-toe-cell {
@@ -130,7 +131,8 @@
             this.init = function(player1, player2) {
                 this.player1 = player1;
                 this.player2 = player2;
-                this.canStart = this.validatePlayer(player1, player2);
+                this.canStart = this.validatePlayers(player1, player2);
+                return this.canStart;
             }
 
             this.validatePlayers = function(player1, player2) {
@@ -160,7 +162,7 @@
             }
 
             this.updateBoard = function(cell, value) {
-                this.board[cell.row][cell.col] = cell.value;
+                this.board[cell.position.row][cell.position.col] = value;
             };
 
             this.changeTurn = function() {
@@ -205,7 +207,10 @@
 
             const player1 = new Player(player1name, 'X');
             const player2 = new Player(player2name, 'O');
-            ticTacToe.init(player1, player2);
+            const canStart = ticTacToe.init(player1, player2);
+            if (canStart) {
+                document.getElementById('app-table').style.visibility = 'visible';
+            }
         }
 
         function _checkWinner(board) {
@@ -232,34 +237,31 @@
         function handleCellChange(event) {
             const cell = event.target;
             const _symbol = cell.value;
-            console.log(cell.dataset.cell);
-            const data = JSON.parse(`{"position": ${cell.dataset.cell} }`);
-            console.log(data);
             const symbol = _symbol.toUpperCase();
+            const data = JSON.parse(`{"position": ${cell.dataset.cell} }`);
+            
+            // Controllo per evitare exploit
             if (symbol !== 'X' && symbol !== 'O') {
                 alert('Il simbolo deve essere X o O');
                 cell.value = null;
                 return;
             }
+            
+            // Controllo per evitare exploit
             if (ticTacToe.turn !== symbol) {
                 alert('Non è il tuo turno!');
                 cell.value = null;
                 return;
             }
-            
+
             cell.value = symbol;
             cell.style.color = symbol === 'X' ? 'red' : 'blue';
+
+            // update model
             ticTacToe.changeTurn();
-            ticTacToe.checkWinner();
             ticTacToe.updateBoard(data, symbol);
+            ticTacToe.checkWinner();
         }
-
-        extractCellCoordinates = function(cell) {
-            const row = cell.dataset.row;
-            const col = cell.dataset.col;
-            return {row: row, col: col};
-        }
-
 
         function error(error, useAlert = true) {
             console.error(error);
