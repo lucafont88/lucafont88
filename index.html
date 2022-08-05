@@ -245,27 +245,6 @@
             return null;
         }
 
-        // function _checkWinner(board) {
-        //     var winner = null;
-        //     var winningCombinations = [
-        //         [0, 0, 0],
-        //         [0, 1, 2],
-        //         [0, 2, 0],
-        //         [1, 0, 1],
-        //         [1, 1, 1],
-        //         [1, 2, 2],
-        //         [2, 0, 2],
-        //         [2, 1, 0]
-        //     ];
-        //     for (var i = 0; i < winningCombinations.length; i++) {
-        //         var [a, b, c] = winningCombinations[i];
-        //         if (board[a][b] && board[a][b] === board[a][c]) {
-        //             winner = board[a][b];
-        //         }
-        //     }
-        //     return winner;
-        // }
-
         function handleCellChange(event) {
             const cell = event.target;
             const _symbol = cell.value;
