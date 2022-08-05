@@ -79,18 +79,18 @@
         <table id="app-table">
             <tr>
                 <td id="cell-0-0"><input id="c-0-0" data-cell='{"row":0, "col":0}' type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-0-1"><input id="c-0-1" type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-0-2"><input id="c-0-2" type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-0-1"><input id="c-0-1" data-cell='{"row":0, "col":1}' type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-0-2"><input id="c-0-2" data-cell='{"row":0, "col":2}' type="text" class="tic-tac-toe-cell"></td>
             </tr>
             <tr>
-                <td id="cell-1-0"><input id="c-1-0" type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-1-1"><input id="c-1-1" type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-1-2"><input id="c-1-2" type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-1-0"><input id="c-1-0" data-cell='{"row":1, "col":0}' type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-1-1"><input id="c-1-1" data-cell='{"row":1, "col":1}' type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-1-2"><input id="c-1-2" data-cell='{"row":1, "col":2}' type="text" class="tic-tac-toe-cell"></td>
             </tr>
             <tr>
-                <td id="cell-2-0"><input id="c-2-0" type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-2-1"><input id="c-2-1" type="text" class="tic-tac-toe-cell"></td>
-                <td id="cell-2-2"><input id="c-2-2" type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-2-0"><input id="c-2-0" data-cell='{"row":2, "col":0}' type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-2-1"><input id="c-2-1" data-cell='{"row":2, "col":1}' type="text" class="tic-tac-toe-cell"></td>
+                <td id="cell-2-2"><input id="c-2-2" data-cell='{"row":2, "col":2}' type="text" class="tic-tac-toe-cell"></td>
             </tr>
         </table>
     </div>
@@ -112,13 +112,52 @@
         const ticTacToe = new TicTacToe();
         
         function TicTacToe() {
+           
             this.board = [
                 [null, null, null],
                 [null, null, null],
                 [null, null, null]
             ];
+
+            this.player1 = undefined;
+            this.player2 = undefined;
+
             this.turn = 'X';
             this.winner = null;
+
+            this.canStart = false;
+
+            this.init = function(player1, player2) {
+                this.player1 = player1;
+                this.player2 = player2;
+                this.canStart = this.validatePlayer(player1, player2);
+            }
+
+            this.validatePlayers = function(player1, player2) {
+                if (player1 == undefined || player2 == undefined || player1 == null || player2 == null) {
+                    alert('Both Players are required!');
+                    return false;
+                }
+                let errors = [];
+                if (player1.name == undefined || player2.name == undefined || player1.name == null || player2.name == null) {
+                    errors.push('Both players must have a name!\n');
+                }
+                if (player1.symbol == undefined || player2.symbol == undefined || player1.symbol == null || player2.symbol == null) {
+                    errors.push('Both players must have a symbol!\n');
+                }
+                if (player1.name.toUpperCase() == player2.name.toUpperCase()) {
+                    errors.push('Players must have different name!\n');
+                }
+                if (player1.symbol.toUpperCase() == player2.symbol.toUpperCase()) {
+                    errors.push('Players must have different symbol!\n');
+                }
+                if (errors.length > 0) {
+                    alert(errors.join(''));
+                    return false;
+                }
+
+                return true;
+            }
 
             this.updateBoard = function(cell, value) {
                 this.board[cell.row][cell.col] = cell.value;
@@ -166,6 +205,7 @@
 
             const player1 = new Player(player1name, 'X');
             const player2 = new Player(player2name, 'O');
+            ticTacToe.init(player1, player2);
         }
 
         function _checkWinner(board) {
@@ -201,6 +241,12 @@
                 cell.value = null;
                 return;
             }
+            if (ticTacToe.turn !== symbol) {
+                alert('Non è il tuo turno!');
+                cell.value = null;
+                return;
+            }
+            
             cell.value = symbol;
             cell.style.color = symbol === 'X' ? 'red' : 'blue';
             ticTacToe.changeTurn();
